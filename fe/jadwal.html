@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Jadwal Mahasiswa - ETS Auth App</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <style>
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        padding: 12px;
+        border-bottom: 1px solid #eee;
+        text-align: left;
+      }
+      th {
+        background: #fafafa;
+        color: #333;
+      }
+      ul.sched {
+        margin: 0;
+        padding-left: 18px;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="container">
+      <h1>Jadwal Kuliah (Mahasiswa)</h1>
+      <p class="muted">Jadwal ini bersifat statis untuk semua mahasiswa (demo).</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Nama Mata Kuliah</th>
+            <th>Kelas</th>
+            <th>SKS</th>
+            <th>Jadwal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Pendidikan Agama Islam</td>
+            <td>IF-E</td>
+            <td>2</td>
+            <td>
+              <ul class="sched">
+                <li>Jumat 15:30 - 17:30 Patt.II-2B</li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td>Pendidikan Pancasila</td>
+            <td>IF-E</td>
+            <td>2</td>
+            <td>
+              <ul class="sched">
+                <li>Kamis 12:00 - 14:00 Patt.II-3C</li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td>Olah Raga I</td>
+            <td>IF-E</td>
+            <td>1</td>
+            <td>
+              <ul class="sched">
+                <li>Senin 08:30 - 09:30 Lapangan E</li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td>Konsep Teknologi</td>
+            <td>IF-E</td>
+            <td>2</td>
+            <td>
+              <ul class="sched">
+                <li>Senin 11:00 - 13:00 Patt.I-3D</li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td>Matematika Diskrit</td>
+            <td>IF-E</td>
+            <td>3</td>
+            <td>
+              <ul class="sched">
+                <li>Jumat 09:30 - 12:00 Patt.II-3B</li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td>Kalkulus</td>
+            <td>IF-E</td>
+            <td>2</td>
+            <td>
+              <ul class="sched">
+                <li>Rabu 16:00 - 18:00 Patt.III-3A</li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td>Algoritma dan Pemrograman</td>
+            <td>IF-E</td>
+            <td>2</td>
+            <td>
+              <ul class="sched">
+                <li>Rabu 07:00 - 09:00 Patt.I-3B</li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td>Sistem Teknologi Basis Data</td>
+            <td>IF-E</td>
+            <td>3</td>
+            <td>
+              <ul class="sched">
+                <li>Rabu 09:30 - 12:00 Patt.II-3B</li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td>Logika Informatika</td>
+            <td>IF-E</td>
+            <td>2</td>
+            <td>
+              <ul class="sched">
+                <li>Kamis 14:00 - 16:00 Patt.I-3A</li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td>Praktikum Algoritma dan Pemrograman</td>
+            <td>IF-E</td>
+            <td>1</td>
+            <td>
+              <ul class="sched">
+                <li>Selasa 08:00 - 10:00 LAB. KOMPUTASI (IF)</li>
+              </ul>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div style="margin-top: 16px" class="actions">
+        <button id="backBtn">Back</button>
+      </div>
+    </main>
+    <script src="js/jadwal.js"></script>
+  </body>
+</html>

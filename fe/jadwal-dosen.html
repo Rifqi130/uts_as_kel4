@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Jadwal Dosen - ETS Auth App</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <style>
+      .tabs {
+        margin-bottom: 20px;
+      }
+      .tab-button {
+        padding: 10px 20px;
+        margin-right: 10px;
+        border: none;
+        background: #e0e0e0;
+        cursor: pointer;
+        border-radius: 4px;
+      }
+      .tab-button.active {
+        background: #2196f3;
+        color: white;
+      }
+      .tab-content {
+        display: none;
+      }
+      .tab-content.active {
+        display: block;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+      }
+      th,
+      td {
+        padding: 12px;
+        border-bottom: 1px solid #eee;
+        text-align: left;
+      }
+      th {
+        background: #fafafa;
+        color: #333;
+      }
+      .class-info {
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #f5f5f5;
+        border-radius: 4px;
+      }
+      .student-list {
+        margin-top: 10px;
+      }
+      .student-list h4 {
+        margin-bottom: 10px;
+      }
+      .student-list ul {
+        margin: 0;
+        padding-left: 20px;
+      }
+      .mahasiswa-search {
+        margin-bottom: 20px;
+      }
+      .mahasiswa-search input {
+        padding: 8px;
+        width: 200px;
+        margin-right: 10px;
+      }
+      .mahasiswa-search button {
+        padding: 8px 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="container">
+      <h1>Jadwal Perkuliahan</h1>
+
+      <div class="tabs">
+        <button class="tab-button active" data-tab="jadwal-mengajar">Jadwal Mengajar</button>
+        <button class="tab-button" data-tab="jadwal-mahasiswa">Jadwal Mahasiswa</button>
+      </div>
+
+      <!-- Tab Jadwal Mengajar -->
+      <div id="jadwal-mengajar" class="tab-content active">
+        <h2>Jadwal Mengajar Dosen</h2>
+        <p class="muted">Jadwal mengajar dan daftar mahasiswa per kelas (demo)</p>
+
+        <!-- Kelas Pertama -->
+        <div class="class-info">
+          <h3>Administrasi Server</h3>
+          <table>
+            <tr>
+              <td><strong>Kelas:</strong></td>
+              <td>IF-E</td>
+            </tr>
+            <tr>
+              <td><strong>SKS:</strong></td>
+              <td>3</td>
+            </tr>
+            <tr>
+              <td><strong>Jadwal:</strong></td>
+              <td>Senin, 13:00 - 15:30</td>
+            </tr>
+            <tr>
+              <td><strong>Ruang:</strong></td>
+              <td>Lab Komputer 3</td>
+            </tr>
+          </table>
+
+          <div class="student-list">
+            <h4>Daftar Mahasiswa:</h4>
+            <ul>
+              <li>John Doe (IF2021001) - Hadir: 12/14</li>
+              <li>Jane Smith (IF2021002) - Hadir: 13/14</li>
+              <li>Bob Wilson (IF2021003) - Hadir: 14/14</li>
+              <li>Alice Brown (IF2021004) - Hadir: 11/14</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Kelas Kedua -->
+        <div class="class-info">
+          <h3>Sistem Operasi</h3>
+          <table>
+            <tr>
+              <td><strong>Kelas:</strong></td>
+              <td>IF-F</td>
+            </tr>
+            <tr>
+              <td><strong>SKS:</strong></td>
+              <td>3</td>
+            </tr>
+            <tr>
+              <td><strong>Jadwal:</strong></td>
+              <td>Rabu, 09:30 - 12:00</td>
+            </tr>
+            <tr>
+              <td><strong>Ruang:</strong></td>
+              <td>Lab Komputer 2</td>
+            </tr>
+          </table>
+
+          <div class="student-list">
+            <h4>Daftar Mahasiswa:</h4>
+            <ul>
+              <li>Carol Davis (IF2021005) - Hadir: 13/14</li>
+              <li>Dave Martin (IF2021006) - Hadir: 12/14</li>
+              <li>Eve Wilson (IF2021007) - Hadir: 14/14</li>
+              <li>Frank Johnson (IF2021008) - Hadir: 12/14</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab Jadwal Mahasiswa -->
+      <div id="jadwal-mahasiswa" class="tab-content">
+        <h2>Jadwal Mahasiswa</h2>
+        <div class="mahasiswa-search">
+          <input type="text" id="nim-search" placeholder="Masukkan NIM Mahasiswa" />
+          <button onclick="searchMahasiswa()">Cari Jadwal</button>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Nama Mata Kuliah</th>
+              <th>Kelas</th>
+              <th>SKS</th>
+              <th>Jadwal</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Pendidikan Agama Islam</td>
+              <td>IF-E</td>
+              <td>2</td>
+              <td>Jumat 15:30 - 17:30 Patt.II-2B</td>
+            </tr>
+            <tr>
+              <td>Administrasi Server</td>
+              <td>IF-E</td>
+              <td>3</td>
+              <td>Senin 13:00 - 15:30 Lab Komputer 3</td>
+            </tr>
+            <tr>
+              <td>Basis Data</td>
+              <td>IF-E</td>
+              <td>3</td>
+              <td>Selasa 08:00 - 10:30 Lab Database</td>
+            </tr>
+            <tr>
+              <td>Algoritma dan Pemrograman</td>
+              <td>IF-E</td>
+              <td>4</td>
+              <td>Rabu 13:00 - 16:30 Lab Pemrograman 1</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="actions" style="margin-top: 20px">
+        <button onclick="window.history.back()">Kembali</button>
+      </div>
+    </main>
+
+    <script>
+      // Handle tab switching
+      const tabs = document.querySelectorAll(".tab-button");
+      const contents = document.querySelectorAll(".tab-content");
+
+      tabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          // Remove active class from all tabs and contents
+          tabs.forEach((t) => t.classList.remove("active"));
+          contents.forEach((c) => c.classList.remove("active"));
+
+          // Add active class to clicked tab and corresponding content
+          tab.classList.add("active");
+          document.getElementById(tab.getAttribute("data-tab")).classList.add("active");
+        });
+      });
+
+      // Mock function for searching student schedule
+      function searchMahasiswa() {
+        const nim = document.getElementById("nim-search").value;
+        if (!nim) {
+          alert("Silakan masukkan NIM mahasiswa");
+          return;
+        }
+        // In a real application, this would make an API call to get the student's schedule
+        alert("Menampilkan jadwal untuk mahasiswa dengan NIM: " + nim);
+      }
+    </script>
+    <script src="js/jadwal.js"></script>
+  </body>
+</html>

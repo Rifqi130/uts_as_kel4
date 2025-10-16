@@ -33,7 +33,7 @@ if (registerForm) {
       const body = await res.json();
       if (!res.ok) throw new Error(body.message || "Register gagal");
       showMsg("Register berhasil. Silakan login.");
-      setTimeout(() => (window.location = "/fe/login.html"), 1000);
+      setTimeout(() => (window.location = "login.html"), 1000);
     } catch (err) {
       showMsg(err.message, true);
     }
@@ -59,7 +59,7 @@ if (loginForm) {
       localStorage.setItem("token", body.token);
       localStorage.setItem("user", JSON.stringify({ fullName: body.fullName, username: body.username, role: body.role }));
       showMsg("Login berhasil.");
-      setTimeout(() => (window.location = "/fe/profile.html"), 800);
+  setTimeout(() => (window.location = "profile.html"), 800);
     } catch (err) {
       showMsg(err.message, true);
     }
@@ -119,7 +119,7 @@ if (profileBox) {
       localStorage.removeItem("token");
       localStorage.removeItem("user");
       // Redirect ke halaman login (Live Server)
-      window.location.href = "http://127.0.0.1:5500/fe/login.html";
+      window.location.href = "login.html";
     });
   // handler action demo: tampilkan pesan sesuai hak akses
   const actionButtons = roleDash ? roleDash.querySelectorAll("button[data-action]") : [];
@@ -142,24 +142,33 @@ if (profileBox) {
       showMsg(ok ? "Aksi berhasil: " + action : "Forbidden: Anda tidak punya hak untuk aksi ini", !ok);
     });
   });
-    // tombol navigasi ke list (data-href)
-    const navButtons = roleDash ? roleDash.querySelectorAll("button[data-href]") : [];
-    navButtons.forEach((b) => {
-      b.addEventListener("click", () => {
-        const href = b.getAttribute("data-href");
-        const stored = localStorage.getItem("user");
-        const currentRole = stored ? JSON.parse(stored).role : null;
-        // simple client-side check: jika mahasiswa tidak boleh akses daftar
-        if (href.endsWith("dosen.html") && currentRole !== "Tendik") {
-          showMsg("Forbidden: Hanya Tendik yang dapat melihat data dosen", true);
-          return;
-        }
-        if (href.endsWith("mahasiswa.html") && !["Tendik","Dosen"].includes(currentRole)) {
-          showMsg("Forbidden: Hanya Tendik atau Dosen yang dapat melihat data mahasiswa", true);
-          return;
-        }
-        // navigasi
-        window.location.href = href;
-      });
+  // tombol navigasi ke list (data-href)
+  const navButtons = roleDash ? roleDash.querySelectorAll("button[data-href]") : [];
+  navButtons.forEach((b) => {
+    b.addEventListener("click", () => {
+      const href = b.getAttribute("data-href");
+      const stored = localStorage.getItem("user");
+      const currentRole = stored ? JSON.parse(stored).role : null;
+      // simple client-side check untuk akses halaman
+      // use href as-is: it can be absolute ("/fe/...") or relative ("jadwal-dosen.html")
+      if (href.endsWith("dosen.html") && currentRole !== "Tendik") {
+        showMsg("Forbidden: Hanya Tendik yang dapat melihat data dosen", true);
+        return;
+      }
+      if (href.endsWith("mahasiswa.html") && !["Tendik", "Dosen"].includes(currentRole)) {
+        showMsg("Forbidden: Hanya Tendik atau Dosen yang dapat melihat data mahasiswa", true);
+        return;
+      }
+      if (href.endsWith("jadwal.html") && currentRole !== "Mahasiswa") {
+        showMsg("Forbidden: Halaman ini khusus untuk Mahasiswa", true);
+        return;
+      }
+      if (href.endsWith("jadwal-dosen.html") && currentRole !== "Dosen") {
+        showMsg("Forbidden: Halaman ini khusus untuk Dosen", true);
+        return;
+      }
+      // navigasi - set location to the provided href (absolute or relative)
+      window.location.href = href;
     });
+  });
 }
