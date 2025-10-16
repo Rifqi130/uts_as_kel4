@@ -59,7 +59,7 @@ if (loginForm) {
       localStorage.setItem("token", body.token);
       localStorage.setItem("user", JSON.stringify({ fullName: body.fullName, username: body.username, role: body.role }));
       showMsg("Login berhasil.");
-  setTimeout(() => (window.location = "profile.html"), 800);
+      setTimeout(() => (window.location = "profile.html"), 800);
     } catch (err) {
       showMsg(err.message, true);
     }
