@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Profile - ETS Auth App</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <main class="container">
+      <h1>Profile</h1>
+      <div id="profileBox">
+        <p id="greeting">(belum login)</p>
+        <p id="authStatus" class="muted">Status koneksi: <span>—</span></p>
+        <pre id="userRaw"></pre>
+        <!-- Dashboard statis per role untuk demo -->
+        <section id="roleDash" style="margin-top: 18px">
+          <h2>Dashboard</h2>
+          <div id="dashMahasiswa" class="roleDash" style="display: none">
+            <h3>Dashboard Mahasiswa</h3>
+            <ul>
+              <li>Melihat jadwal kuliah</li>
+              <li>Melihat nilai</li>
+              <li>Mengisi KRS</li>
+            </ul>
+            <div class="actions">
+              <button data-action="view-schedule">Lihat Jadwal</button>
+              <button data-action="view-grades">Lihat Nilai</button>
+              <button data-action="fill-krs">Isi KRS</button>
+            </div>
+          </div>
+
+          <div id="dashDosen" class="roleDash" style="display: none">
+            <h3>Dashboard Dosen</h3>
+            <ul>
+              <li>Menginput nilai</li>
+              <li>Melihat daftar mahasiswa</li>
+            </ul>
+            <div class="actions">
+              <button data-action="input-grades">Input Nilai</button>
+              <button data-action="list-students">Daftar Mahasiswa</button>
+            </div>
+          </div>
+
+          <div id="dashTendik" class="roleDash" style="display: none">
+            <h3>Dashboard Tendik</h3>
+            <ul>
+              <li>Mengelola data dosen</li>
+              <li>Mengelola data mahasiswa</li>
+            </ul>
+            <div class="actions">
+                <button data-href="/fe/dosen.html">Melihat Data Dosen</button>
+                <button data-href="/fe/mahasiswa.html">Melihat Data Mahasiswa</button>
+            </div>
+          </div>
+        </section>
+        <div class="actions">
+          <button id="logoutBtn">Logout</button>
+        </div>
+      </div>
+    </main>
+    <script src="js/auth.js"></script>
+  </body>
+</html>

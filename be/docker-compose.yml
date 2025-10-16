@@ -1,0 +1,68 @@
+services:
+  # 1. LAYANAN DATABASE (MySQL)
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: true
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - db_data:/var/lib/mysql # Volume untuk persistensi data
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "--silent"]
+      timeout: 20s
+      retries: 10
+      start_period: 10s # Tambahkan waktu inisialisasi agar tidak langsung gagal
+
+  # 2. LAYANAN IDP (KEYCLOAK)
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0
+    restart: always
+    environment:
+      # Keycloak menggunakan DB bawaan untuk UTS, atau hubungkan ke DB lain jika diperlukan
+      KC_DB: dev-file # Menggunakan DB file lokal untuk kemudahan UTS
+      KC_HOSTNAME: auth.kampus.local
+      KC_ADMIN_USER: ${KC_ADMIN_USER}
+      KC_ADMIN_PASSWORD: ${KC_ADMIN_PASSWORD}
+      KC_HTTP_ENABLED: true
+    command: start-dev 
+    ports:
+      - "8081:8080" # Akses Keycloak di host port 8081
+    depends_on:
+      db:
+        condition: service_healthy # Keycloak menunggu DB siap
+    networks:
+      - internal
+
+  # 3. LAYANAN APLIKASI (APP) - Node.js
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile-app
+    restart: always
+    ports:
+      - "80:8080" # Akses Aplikasi di host port 80
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      # Konfigurasi Keycloak untuk Aplikasi
+      KEYCLOAK_URL: http://keycloak:8080/realms/kampusku 
+      KEYCLOAK_CLIENT_ID: app-kampus
+      # ... env aplikasi lainnya
+    depends_on:
+      - db
+      - keycloak
+    networks:
+      - internal
+      - proxy_net
+
+networks:
+  internal:
+    driver: bridge
+  proxy_net:
+
+volumes:
+  db_data: {}

@@ -1,0 +1,16 @@
+# Dockerfile-app
+FROM node:20-slim
+
+# Instalasi Prisma dan Dependencies (Langkah Penting)
+WORKDIR /usr/src/app
+COPY package*.json ./
+RUN npm install
+# Copy skema dan jalankan generate Prisma Client saat build
+COPY prisma ./prisma/
+RUN npx prisma generate
+
+# Copy kode aplikasi
+COPY . .
+
+EXPOSE 8080
+CMD ["npm", "start"]

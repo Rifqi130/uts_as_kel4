@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Register - ETS Auth App</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <main class="container">
+      <h1>Register</h1>
+      <form id="registerForm">
+        <label
+          >Full name
+          <input name="fullName" required />
+        </label>
+        <label
+          >Email
+          <input name="email" type="email" required />
+        </label>
+        <label
+          >Password
+          <input name="password" type="password" required minlength="6" />
+        </label>
+        <button type="submit">Register</button>
+      </form>
+
+      <p class="muted">Sudah punya akun? <a href="login.html">Login</a></p>
+      <div id="msg" role="status"></div>
+    </main>
+    <script src="js/auth.js"></script>
+  </body>
+</html>
