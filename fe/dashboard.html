@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Dashboard - BIMA</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <nav class="sidebar">
+        <div class="logo">
+          Sistem Informasi AUTH
+        </div>
+        <ul class="nav-menu" id="navMenu">
+          <!-- Menu will be injected by JS -->
+        </ul>
+      </nav>
+      <div class="main-content">
+        <div class="top-bar-right">
+          <div class="user-info">
+            <span id="greeting">(belum login)</span><br>
+            <span id="userRole" class="role"></span><br>
+            <span id="authStatus" class="muted">Status koneksi: <span>—</span></span>
+            <button id="logoutBtn" style="margin-top:10px;">Logout</button>
+          </div>
+        </div>
+        <div class="dashboard-content">
+          <div class="dashboard-flex">
+            <div class="info-section">
+              <h2>Pengumuman</h2>
+              <div id="announcementBox">
+                <!-- Announcements will be injected by JS -->
+              </div>
+            </div>
+            <div class="info-section">
+              <h2>Data Akademik</h2>
+              <div class="academic-info" id="academicInfoBox">
+                <!-- Academic info will be injected by JS -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="js/auth.js"></script>
+    <script>
+      // Fill user info and menu using auth.js logic
+      document.addEventListener('DOMContentLoaded', function() {
+        const token = localStorage.getItem("token");
+        const user = localStorage.getItem("user");
+        const greeting = document.getElementById("greeting");
+        const userRole = document.getElementById("userRole");
+        const authStatus = document.getElementById("authStatus");
+        const navMenu = document.getElementById("navMenu");
+        const announcementBox = document.getElementById("announcementBox");
+        const academicInfoBox = document.getElementById("academicInfoBox");
+        // Menu definitions
+        const menus = {
+          Mahasiswa: [
+            { href: "./dashboard.html", label: "Dashboard" },
+            { href: "./jadwal.html", label: "Jadwal Kuliah" },
+            { href: "./hasil-studi.html", label: "Hasil Studi" },
+            { href: "./pengajuan-krs.html", label: "Pengajuan KRS" },
+            { href: "./cetak-krp.html", label: "Cetak KRP" }
+          ],
+          Dosen: [
+            { href: "./dashboard.html", label: "Dashboard" },
+            { href: "./jadwal-dosen.html", label: "Jadwal Dosen" },
+            { href: "./mahasiswa.html", label: "Daftar Mahasiswa" }
+          ],
+          Tendik: [
+            { href: "./dashboard.html", label: "Dashboard" },
+            { href: "./dosen.html", label: "Data Dosen" },
+            { href: "./mahasiswa.html", label: "Data Mahasiswa" }
+          ]
+        };
+        // Announcement definitions
+        const announcements = {
+          Mahasiswa: [
+            { title: "Perwalian", text: "Anda telah melakukan perwalian Semester Gasal 2025/2026", date: "23 Juli 2025 07:54" },
+            { title: "Keringanan SKS", text: "Anda tidak mengajukan keringanan 6 SKS" },
+            { title: "Tunggakan", text: "Tidak ada tunggakan" }
+          ],
+          Dosen: [
+            { title: "Input Nilai", text: "Jangan lupa input nilai sebelum 30 Juli 2025" },
+            { title: "Perwalian", text: "Perwalian mahasiswa bimbingan sudah dibuka" }
+          ],
+          Tendik: [
+            { title: "Update Data", text: "Segera update data dosen dan mahasiswa semester ini" },
+            { title: "Pengumuman", text: "Rapat tendik diadakan 25 Juli 2025 pukul 09:00" }
+          ]
+        };
+        // Academic info definitions
+        const academicInfo = {
+          Mahasiswa: [
+            { label: "Fakultas", value: "Fakultas Teknik Industri" },
+            { label: "Program Studi", value: "Teknik Informatika" },
+            { label: "Dosen Wali", value: "Frans Richard Kodong, S.T., M.Kom., Ph.D" },
+            { label: "IPK", value: "3.85" }
+          ],
+          Dosen: [
+            { label: "Fakultas", value: "Fakultas Teknik Industri" },
+            { label: "Program Studi", value: "Teknik Informatika" },
+            { label: "NIDN", value: "123456789" }
+          ],
+          Tendik: [
+            { label: "Fakultas", value: "Fakultas Teknik Industri" },
+            { label: "Unit Kerja", value: "Bagian Akademik" }
+          ]
+        };
+        let role = "Mahasiswa";
+        if (!token || !user) {
+          greeting.textContent = "(belum login)";
+          userRole.textContent = "";
+          if (authStatus) authStatus.querySelector("span").textContent = "Disconnected";
+        } else {
+          const userObj = JSON.parse(user);
+          greeting.textContent = (userObj.fullName || userObj.username || "User") + " (" + (userObj.username || "") + ")";
+          userRole.textContent = userObj.role || "";
+          role = userObj.role;
+          if (authStatus) authStatus.querySelector("span").textContent = "Connected";
+        }
+        // Render menu
+        if (navMenu) {
+          navMenu.innerHTML = "";
+          (menus[role] || menus["Mahasiswa"]).forEach(item => {
+            const li = document.createElement("li");
+            const a = document.createElement("a");
+            a.href = item.href;
+            a.textContent = item.label;
+            if (window.location.pathname.endsWith(item.href.replace("./", ""))) {
+              a.classList.add("active");
+            }
+            li.appendChild(a);
+            navMenu.appendChild(li);
+          });
+        }
+        // Render academic info
+        if (academicInfoBox) {
+          academicInfoBox.innerHTML = "";
+          (academicInfo[role] || academicInfo["Mahasiswa"]).forEach(item => {
+            const div = document.createElement("div");
+            div.innerHTML = `<p>${item.label}</p><p><span>${item.value}</span></p>`;
+            academicInfoBox.appendChild(div);
+          });
+        }
+        // Render announcements
+        if (announcementBox) {
+          announcementBox.innerHTML = "";
+          (announcements[role] || announcements["Mahasiswa"]).forEach(item => {
+            const div = document.createElement("div");
+            div.className = "announcement";
+            div.innerHTML = `<h3>${item.title}</h3><p>${item.text}</p>${item.date ? `<p class='date'>${item.date}</p>` : ""}`;
+            announcementBox.appendChild(div);
+          });
+        }
+        // Logout button handler
+        const logoutBtn = document.getElementById("logoutBtn");
+        if (logoutBtn) {
+          logoutBtn.addEventListener("click", function() {
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
+            window.location.href = "login.html";
+          });
+        }
+      });
+    </script>
+  </body>
+</html>

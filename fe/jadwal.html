@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Jadwal Mahasiswa - ETS Auth App</title>
+    <title>Jadwal Mahasiswa - Sistem Informasi AUTH</title>
     <link rel="stylesheet" href="css/style.css" />
     <style>
       table {
@@ -27,8 +27,18 @@
     </style>
   </head>
   <body>
-    <main class="container">
-      <h1>Jadwal Kuliah (Mahasiswa)</h1>
+    <div class="dashboard-container">
+      <nav class="sidebar">
+        <div class="logo">
+          Sistem Informasi AUTH
+        </div>
+        <ul class="nav-menu" id="navMenu">
+          <!-- Menu will be injected by JS -->
+        </ul>
+      </nav>
+      <div class="main-content">
+        <div class="dashboard-content">
+          <h1>Jadwal Kuliah (Mahasiswa)</h1>
       <p class="muted">Jadwal ini bersifat statis untuk semua mahasiswa (demo).</p>
       <table>
         <thead>
@@ -143,10 +153,10 @@
         </tbody>
       </table>
 
-      <div style="margin-top: 16px" class="actions">
-        <button id="backBtn">Back</button>
+        </div>
       </div>
-    </main>
+    </div>
+    <script src="js/auth.js"></script>
     <script src="js/jadwal.js"></script>
   </body>
 </html>
