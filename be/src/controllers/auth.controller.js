@@ -1,107 +1,76 @@
-import { prisma, Role } from "../configs/prisma.js";
-import bcrypt from "bcryptjs";
-import { signPayLoad, verifyToken } from "../utils/jwt.js";
+// File: routes/auth.controller.js
+import { PrismaClient } from "@prisma/client";
 
-const CGetRole = (email) => {
-  if (email.endsWith("@student")) return Role.Mahasiswa;
-  if (email.endsWith("@dosen")) return Role.Dosen;
-  if (email.endsWith("@tendik")) return Role.Tendik;
-  return Role.Guest; // jika domain tidak dikenal
-};
+const prisma = new PrismaClient();
 
-const getUsername = (email) => {
-  return email.split("@")[0]; // ambil bagian sebelum "@"
-};
-
-// 🔹 Registrasi user baru
-export const CRegister = async (req, res) => {
-  const { email, password, fullName } = req.body;
-
-  if (!email || !password || !fullName) return res.status(400).json({ message: "Email, password, nama lengkap wajib diisi" });
-
-  const existingUser = await prisma.user.findUnique({ where: { email } });
-
-  if (existingUser) return res.status(400).json({ message: "Email sudah terdaftar" });
-
-  const hashedPassword = await bcrypt.hash(password, 10);
-  const username = getUsername(email);
-  const role = CGetRole(email); // otomatis tentukan role
-
-  const newUser = await prisma.user.create({
-    data: { fullName, email, username, password: hashedPassword, role },
-  });
-
-  res.status(201).json({
-    message: "Registrasi berhasil",
-    user: {
-      fullName: newUser.fullName,
-      username: newUser.username,
-      email: newUser.email,
-      role: newUser.role,
-    },
-  });
-};
-
-// 🔹 Login user
-export const CLogin = async (req, res) => {
-  const { email, password } = req.body;
-
-  const user = await prisma.user.findUnique({ where: { email } });
-  if (!user) return res.status(404).json({ message: "User tidak ditemukan" });
-
-  const valid = await bcrypt.compare(password, user.password);
-  if (!valid) return res.status(401).json({ message: "Password salah" });
-
-  const token = signPayLoad(
-    {
-      id: user.id,
-      fullName: user.fullName,
-      email: user.email,
-      username: user.username,
-      role: user.role,
-    },
-    "8h"
-  );
-
-  res.json({
-    message: "Login berhasil",
-    token,
-    fullName: user.fullName,
-    username: user.username,
-    role: user.role,
-  });
-};
-
-// 🔹 Ambil data user dari token (misalnya untuk halaman profil atau greeting)
-export const CMe = async (req, res) => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader) return res.status(401).json({ message: "Token tidak ditemukan" });
-
-  const token = authHeader.split(" ")[1];
+// ROUTE 1: Khusus Mahasiswa (Melihat Profil Sendiri)
+export const CGetMyProfile = async (req, res) => {
   try {
-    const decoded = verifyToken(token);
-    res.json({ message: `Hi, ${decoded.role}!`, user: decoded });
-  } catch (err) {
-    res.status(401).json({ message: "Token tidak valid" });
+    const user = await prisma.user.findUnique({
+      where: { email: req.user.email },
+      select: { id: true, email: true, username: true, role: true },
+    });
+
+    if (!user) {
+      return res
+        .status(404)
+        .json({ error: "Data pengguna tidak ditemukan di database." });
+    }
+
+    res.json({
+      status: "success",
+      message: "Data profil berhasil diambil.",
+      data: user,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Gagal mengambil data profil." });
   }
 };
 
-// daftar dosen (hanya oleh Tendik)
-export const CListDosen = async (req, res) => {
+// ROUTE 2: Khusus Dosen (Melihat data semua Mahasiswa)
+export const CGetAllMahasiswa = async (req, res) => {
   try {
-    const dosens = await prisma.user.findMany({ where: { role: Role.Dosen }, select: { id: true, fullName: true, email: true, username: true, role: true } });
-    res.json({ data: dosens });
-  } catch (err) {
-    res.status(500).json({ message: "Gagal mengambil data dosen" });
+    const mahasiswaList = await prisma.user.findMany({
+      where: { role: "Mahasiswa" },
+      select: { id: true, email: true, username: true },
+    });
+
+    res.json({
+      status: "success",
+      message: "Daftar semua mahasiswa berhasil diambil.",
+      count: mahasiswaList.length,
+      data: mahasiswaList,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Gagal mengambil daftar mahasiswa." });
   }
 };
 
-// daftar mahasiswa (oleh Tendik dan Dosen)
-export const CListMahasiswa = async (req, res) => {
+// ROUTE 3: Khusus Tendik (Mengubah Role User)
+export const CUpdateRole = async (req, res) => {
+  const { userId } = req.params;
+  const { newRole } = req.body;
+
+  if (!["Mahasiswa", "Dosen", "Tendik"].includes(newRole)) {
+    return res.status(400).json({ error: "Role yang diberikan tidak valid." });
+  }
+
   try {
-    const mhs = await prisma.user.findMany({ where: { role: Role.Mahasiswa }, select: { id: true, fullName: true, email: true, username: true, role: true } });
-    res.json({ data: mhs });
-  } catch (err) {
-    res.status(500).json({ message: "Gagal mengambil data mahasiswa" });
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: { role: newRole },
+      select: { id: true, email: true, role: true },
+    });
+
+    res.json({
+      status: "success",
+      message: `Role user ${updatedUser.id} berhasil diubah menjadi ${newRole}.`,
+      data: updatedUser,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Gagal mengubah role pengguna." });
   }
 };
